@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "buildCommand": "yarn build",
+  "devCommand": "yarn dev",
+  "installCommand": "yarn install",
   "framework": "nextjs",
   "outputDirectory": ".next",
   "redirects": [
@@ -14,6 +14,7 @@
   ],
   "env": {
     "NEXTAUTH_SECRET": "USE_A_STRONG_SECRET_HERE",
-    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50"
+    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50",
+    "NEXT_PUBLIC_URL": "https://farcaster-v2-frame-template-qf5jrtuew-mistys-projects-9d6f5198.vercel.app"
   }
 }

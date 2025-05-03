@@ -20,7 +20,7 @@ if (!projectId) {
 
 export const config = getDefaultConfig({
   appName: "Tip Me",
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "",
+  projectId: projectId,
   chains: [celo, celoAlfajores],
   transports: {
     [celo.id]: http(),

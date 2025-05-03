@@ -1,9 +1,16 @@
 import { safeParseFrameEmbed } from '@farcaster/frame-core'
 import { NextRequest, NextResponse } from 'next/server'
-import { incrementUserScore, storeUserAnswer, getUserScore, resetUserData } from '~/lib/state'
+
+// Extend the message type with the properties we need
+interface ExtendedFrameMessage {
+  buttonIndex?: number;
+  url?: string;
+  // Use unknown instead of any for better type safety
+  [key: string]: unknown;
+}
 
 /**
- * Handle frame requests with scoring support
+ * Handle frame requests with frame navigation and state
  */
 export async function POST(req: NextRequest) {
   try {
@@ -15,136 +22,68 @@ export async function POST(req: NextRequest) {
       return new Response('Invalid frame request', { status: 400 })
     }
     
-    const message = result.data
-    // Use a default userId since we might not have access to fid in frame data
-    const userId = 'anonymous-user'
+    const message = result.data as unknown as ExtendedFrameMessage
     // Get button index from the message when available or default to 1
     const buttonIndex = message.buttonIndex || 1
     
     // Get the path from the frame URL
-    const framePath = new URL(message.url || '').pathname
-    const questionId = framePath.split('/').pop() || 'unknown'
+    const url = message.url || ''
+    const framePath = new URL(url).pathname
     
-    // Process the user's answer
-    if (framePath.includes('/question')) {
-      // Store the answer
-      await storeUserAnswer(userId, questionId, buttonIndex.toString())
-      
-      // Give points based on the answer (you can customize this scoring logic)
-      if (isCorrectAnswer(questionId, buttonIndex)) {
-        await incrementUserScore(userId, 10) // 10 points for correct answer
-      }
-      
-      // Determine the next question or if we should show results
-      const nextQuestionOrResult = getNextQuestion(questionId)
-      
-      // Build the next frame response
-      return buildFrameResponse(nextQuestionOrResult, userId)
-    } 
-    else if (framePath.includes('/result')) {
-      // Handle actions on the result screen
-      if (buttonIndex === 1) {
-        // Reset button was pressed, move back to first question
-        await resetUserData(userId)
-        return buildFrameResponse('question1', userId)
+    // Handle the quiz entry point from /api/frames/quiz
+    if (framePath.includes('/frames/quiz')) {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question1`, 302)
+    }
+    
+    // Handle result page actions
+    if (framePath.includes('/result')) {
+      if (buttonIndex === 2) {
+        // Retake Quiz button was pressed (button index 2)
+        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question1`, 302)
+      } else {
+        // Share Results button was pressed (button index 1) - just stay on the result page
+        // This could be enhanced to share to social media, etc.
+        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/result?${new URL(url).search}`, 302)
       }
     }
     
-    // Default to showing the first question
-    return buildFrameResponse('question1', userId)
+    // Handle the start quiz button from the main frame
+    if (framePath === '/frames') {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question1`, 302)
+    }
+    
+    // For individual question responses, extract question number and redirect to next question
+    const questionMatch = framePath.match(/\/question(\d+)/)
+    if (questionMatch) {
+      const currentQuestionNum = parseInt(questionMatch[1])
+      const nextQuestionNum = currentQuestionNum + 1
+      
+      // If this is the last question (5), redirect to result
+      if (currentQuestionNum === 5) {
+        // Pass all previous answers and the current answer to the result page
+        const searchParams = new URL(url).searchParams
+        searchParams.append(`q${currentQuestionNum}`, buttonIndex.toString())
+        
+        return NextResponse.redirect(
+          `${process.env.NEXT_PUBLIC_URL}/api/frames/result?${searchParams.toString()}`, 
+          302
+        )
+      } else {
+        // Pass all previous answers and the current answer to the next question
+        const searchParams = new URL(url).searchParams
+        searchParams.append(`q${currentQuestionNum}`, buttonIndex.toString())
+        
+        return NextResponse.redirect(
+          `${process.env.NEXT_PUBLIC_URL}/api/frames/question${nextQuestionNum}?${searchParams.toString()}`, 
+          302
+        )
+      }
+    }
+    
+    // Default fallback - go to question 1
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question1`, 302)
   } catch (error) {
     console.error('Error handling frame request:', error)
     return NextResponse.json({ error: 'Failed to process frame request' }, { status: 500 })
   }
-}
-
-/**
- * Check if the user's answer is correct
- */
-function isCorrectAnswer(questionId: string, buttonIndex: number): boolean {
-  // Define correct answers for each question
-  const correctAnswers: Record<string, number> = {
-    'question1': 2, // Option 2 is correct for question 1 (Financial inclusion)
-    'question2': 1, // Option 1 is correct for question 2 (cUSD)
-    'question3': 3, // Example: Option 3 is correct for question 3
-    'question4': 2, // Example: Option 2 is correct for question 4
-    'question5': 4, // Example: Option 4 is correct for question 5
-  }
-  
-  return buttonIndex === correctAnswers[questionId]
-}
-
-/**
- * Get the next question based on the current one
- */
-function getNextQuestion(currentQuestion: string): string {
-  const questions = ['question1', 'question2', 'question3', 'question4', 'question5']
-  const currentIndex = questions.indexOf(currentQuestion)
-  
-  if (currentIndex === -1 || currentIndex === questions.length - 1) {
-    return 'result' // Go to results if we're at the last question
-  }
-  
-  return questions[currentIndex + 1] // Go to next question
-}
-
-/**
- * Build a frame response
- */
-async function buildFrameResponse(path: string, userId: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://your-vercel-domain.vercel.app'
-  
-  let frameMetadata
-  
-  if (path === 'result') {
-    // Get the user's score and answers for the result page
-    const score = await getUserScore(userId)
-    
-    frameMetadata = {
-      frames: {
-        version: '1',
-        image: `${baseUrl}/api/frames/score-image?score=${score}`,
-        buttons: [
-          {
-            label: 'Play Again',
-            action: 'post'
-          },
-          {
-            label: 'Share Results',
-            action: 'post_redirect'
-          }
-        ],
-        post_url: `${baseUrl}/api/frames`
-      }
-    }
-  } else {
-    // Regular question frame
-    frameMetadata = {
-      frames: {
-        version: '1',
-        image: `${baseUrl}/api/frames/${path}/image`,
-        buttons: [
-          {
-            label: 'Option 1',
-            action: 'post'
-          },
-          {
-            label: 'Option 2',
-            action: 'post'
-          },
-          {
-            label: 'Option 3',
-            action: 'post'
-          },
-          {
-            label: 'Option 4',
-            action: 'post'
-          }
-        ],
-        post_url: `${baseUrl}/api/frames`
-      }
-    }
-  }
-  
-  return NextResponse.json(frameMetadata)
 }

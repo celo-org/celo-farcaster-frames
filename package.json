@@ -6,9 +6,9 @@
     "farcaster-v2-frame-template"
   ],
   "scripts": {
-    "build": "cd farcaster-v2-frame-template && npm run build",
-    "start": "cd farcaster-v2-frame-template && npm start",
-    "dev": "cd farcaster-v2-frame-template && npm run dev",
-    "vercel-build": "cd farcaster-v2-frame-template && npm install && npm run build"
+    "build": "cd farcaster-v2-frame-template && yarn build",
+    "start": "cd farcaster-v2-frame-template && yarn start",
+    "dev": "cd farcaster-v2-frame-template && yarn dev",
+    "vercel-build": "echo 'Starting vercel build' && cd farcaster-v2-frame-template && echo 'Installing dependencies' && yarn install --verbose && echo 'Building project' && yarn build --verbose"
   }
 }

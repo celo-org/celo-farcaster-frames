@@ -72,7 +72,13 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
-  }
+    jwt: async ({ token }) => {
+      return token;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
 }
 
 export const getSession = () => getServerSession(authOptions)

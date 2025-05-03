@@ -1,58 +1,60 @@
-import { Redis } from '@upstash/redis';
+// Simple in-memory state management for user data
+// In a production app, you'd use a database
 
-// Initialize Redis client - will use environment variables UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
+interface UserData {
+  score: number;
+  answers: Record<string, string>;
+}
 
-// Keys for Redis
-const USER_SCORE_PREFIX = 'user:score:';
-const USER_ANSWERS_PREFIX = 'user:answers:';
+// In-memory store for user data
+const userStore: Record<string, UserData> = {};
 
 /**
  * Store a user's answer to a question
  */
-export async function storeUserAnswer(userId: string, questionId: string, answer: string): Promise<void> {
-  const key = `${USER_ANSWERS_PREFIX}${userId}`;
-  await redis.hset(key, { [questionId]: answer });
+export async function storeUserAnswer(
+  userId: string, 
+  questionId: string, 
+  answer: string
+): Promise<void> {
+  if (!userStore[userId]) {
+    userStore[userId] = { score: 0, answers: {} };
+  }
+  
+  userStore[userId].answers[questionId] = answer;
 }
 
 /**
  * Increment a user's score
  */
-export async function incrementUserScore(userId: string, points: number): Promise<number> {
-  const key = `${USER_SCORE_PREFIX}${userId}`;
-  return await redis.incrby(key, points);
+export async function incrementUserScore(
+  userId: string, 
+  points: number
+): Promise<void> {
+  if (!userStore[userId]) {
+    userStore[userId] = { score: 0, answers: {} };
+  }
+  
+  userStore[userId].score += points;
 }
 
 /**
  * Get a user's current score
  */
 export async function getUserScore(userId: string): Promise<number> {
-  const key = `${USER_SCORE_PREFIX}${userId}`;
-  const score = await redis.get<number>(key);
-  return score || 0;
+  return userStore[userId]?.score || 0;
 }
 
 /**
- * Get all of a user's answers
+ * Get a user's answers
  */
 export async function getUserAnswers(userId: string): Promise<Record<string, string>> {
-  const key = `${USER_ANSWERS_PREFIX}${userId}`;
-  const answers = await redis.hgetall<Record<string, string>>(key);
-  return answers || {};
+  return userStore[userId]?.answers || {};
 }
 
 /**
- * Reset a user's data (score and answers)
+ * Reset user data
  */
 export async function resetUserData(userId: string): Promise<void> {
-  const scoreKey = `${USER_SCORE_PREFIX}${userId}`;
-  const answersKey = `${USER_ANSWERS_PREFIX}${userId}`;
-  
-  await Promise.all([
-    redis.del(scoreKey),
-    redis.del(answersKey)
-  ]);
+  userStore[userId] = { score: 0, answers: {} };
 }

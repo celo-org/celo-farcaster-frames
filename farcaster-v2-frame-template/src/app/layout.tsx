@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import { getSession } from "~/auth"
-import "~/app/globals.css";
-import { Providers } from "~/app/providers";
+import { getSession } from "../auth"
+import "./globals.css";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Tip Me",

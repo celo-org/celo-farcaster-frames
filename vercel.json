@@ -1,8 +1,8 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "buildCommand": "cd farcaster-v2-frame-template && npm install && npm run build",
-  "installCommand": "cd farcaster-v2-frame-template && npm install",
+  "buildCommand": "cd farcaster-v2-frame-template && yarn install && yarn add --dev typescript @types/react && yarn build",
+  "installCommand": "cd farcaster-v2-frame-template && yarn install",
   "outputDirectory": "farcaster-v2-frame-template/.next",
   "redirects": [
     {
@@ -13,6 +13,7 @@
   ],
   "env": {
     "NEXTAUTH_SECRET": "USE_A_STRONG_SECRET_HERE",
-    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50"
+    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50",
+    "NEYNAR_API_KEY": "YOUR_NEYNAR_API_KEY_HERE"
   }
 }

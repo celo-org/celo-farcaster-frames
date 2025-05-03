@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 
-const Demo = dynamic(() => import("~/components/Demo"), {
+// Use relative import instead of alias for better Next.js compatibility
+const Demo = dynamic(() => import("../components/Demo"), {
   ssr: false,
 });
 

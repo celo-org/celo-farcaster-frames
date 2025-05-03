@@ -2,15 +2,14 @@
 "use client";
 
 import { useEffect, useState} from "react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import sdk, {
   type Context,
 } from "@farcaster/frame-sdk";
 import { createStore } from 'mipd'
-import UserSearch from "./farcaster/SearchUser";
+import Quiz from "./farcaster/Quiz";
 
 export default function TipMeTemplate(
-  { title }: { title?: string } = { title: "Tip Me" }
+  { title }: { title?: string } = { title: "Quiz Demo" }
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();
@@ -58,12 +57,11 @@ store.subscribe(providerDetails => {
     }}>
          <div className="max-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto py-6 px-4 bg-card rounded-xl shadow-sm border border-border">
-        <img alt="Tip Me Logo" src={`${appUrl}/Celo_Wordmark_RGB_Onyx.svg`} className="w-24 mx-auto block  mt-6" />
-        <h1 className="text-3xl font-bold text-center mb-6  text-black">{title}</h1>
+        <img alt="Logo" src={`${appUrl}/Celo_Wordmark_RGB_Onyx.svg`} className="w-24 mx-auto block mt-6" />
+        <h1 className="text-3xl font-bold text-center mb-6 text-black">{title}</h1>
         <div>
           <div className="mb-6 flex flex-col justify-center items-center gap-4">
-            <ConnectButton />
-            <UserSearch />
+            <Quiz />
           </div>
         </div>
       </div>

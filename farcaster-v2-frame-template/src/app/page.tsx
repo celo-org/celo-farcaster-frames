@@ -12,10 +12,10 @@ const frame = {
   imageUrl: `${appUrl}/tipme.png`,
   // This is the button displayed when sharing the link.
   button: {
-    title: "Tip Me",
+    title: "Start Quiz",
     action: {
       type: "launch_frame",
-      name: "Tip Me",
+      name: "Farcaster Quiz",
       url: appUrl,
       splashImageUrl: `${appUrl}/celosplash.png`,
       splashBackgroundColor: "#f7f7f7",
@@ -27,10 +27,10 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Tip Me",
+    title: "Farcaster Quiz",
     openGraph: {
-      title: "Tip Me",
-      description: "Tip your friends and favorite creators with crypto!",
+      title: "Farcaster Quiz",
+      description: "Test your knowledge about Farcaster and blockchain!",
     },
     other: {
       "fc:frame": JSON.stringify(frame),
