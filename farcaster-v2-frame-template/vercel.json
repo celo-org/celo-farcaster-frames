@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/frames",
+      "permanent": false
+    }
+  ],
+  "env": {
+    "NEXTAUTH_SECRET": "USE_A_STRONG_SECRET_HERE",
+    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50"
+  }
+}

@@ -52,7 +52,9 @@ store.subscribe(providerDetails => {
       paddingTop: context?.client.safeAreaInsets?.top ?? 0, 
       paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
       paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
-      paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
+      paddingRight: context?.client.safeAreaInsets?.right ?? 0,
+      transitionProperty: "none",
+      marginRight: "0px"
     }}>
          <div className="max-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto py-6 px-4 bg-card rounded-xl shadow-sm border border-border">

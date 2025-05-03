@@ -17,8 +17,7 @@ const frame = {
       type: "launch_frame",
       name: "Tip Me",
       url: appUrl,
-      splashImageUrl: `${appUrl}/celo
-      `,
+      splashImageUrl: `${appUrl}/celosplash.png`,
       splashBackgroundColor: "#f7f7f7",
     },
   },
