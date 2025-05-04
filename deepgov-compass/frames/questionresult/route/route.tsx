@@ -78,7 +78,7 @@ export const POST = frames(async (ctx) => {
     image: {
       src: `${ctx.baseUrl}/images/${personaImageName}.jpg`,
     },
-    title: `Your DeepGov Persona: ${result.winner.toUpperCase()}`,
+    title: `Your AI Accord Persona: ${result.winner.toUpperCase()}`,
     description: result.quote,
     buttons: [
       <Button action="post" target="/frames/route">

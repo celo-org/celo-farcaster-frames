@@ -15,6 +15,7 @@
   "env": {
     "NEXTAUTH_SECRET": "USE_A_STRONG_SECRET_HERE",
     "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "3927fffa4d437bd3d91e58cb4eae4a50",
-    "NEXT_PUBLIC_URL": "https://farcaster-v2-frame-template-qf5jrtuew-mistys-projects-9d6f5198.vercel.app"
+    "NEXT_PUBLIC_URL": "https://farcaster-v2-frame-template-mistys-projects-9d6f5198.vercel.app",
+    "NEYNAR_API_KEY": "572D8340-339A-4791-8ED6-E694BB934AC1"
   }
 }

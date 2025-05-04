@@ -1,91 +1,54 @@
 /* eslint-disable react/jsx-key */
 import { frames } from "../../frames";
 import { Button } from "frames.js/next";
-
-// Import persona quotes from your existing scoring logic
-const personaQuotes = {
-  obelisk: "Logic prevails. Strategy wins. You see the long game.",
-  muse: "Imagination is your compass. You seek beautiful chaos.",
-  kairo: "You value control, command, and clear lines of action.",
-  null: "You prefer to watch, observe, and let the world unfold.",
-  libby: "Freedom first, rules later. You are built to rebel.",
-};
-
-// Scoring function adapted from your existing server/scoring.js
-function scoreAnswers(answers) {
-  // Initialize scores for each persona
-  const scores = {
-    obelisk: 0,
-    muse: 0,
-    kairo: 0,
-    null: 0,
-    libby: 0,
-  };
-
-  // Define scoring rules based on questions.md
-  const scoringRules = [
-    // Question 1
-    { 1: 'obelisk', 2: 'muse', 3: 'kairo', 4: 'null' },
-    // Question 2
-    { 1: 'libby', 2: 'kairo', 3: 'muse', 4: 'obelisk' },
-    // Question 3
-    { 1: 'kairo', 2: 'obelisk', 3: 'libby', 4: 'muse' },
-    // Question 4
-    { 1: 'muse', 2: 'null', 3: 'libby', 4: 'kairo' },
-    // Question 5
-    { 1: 'obelisk', 2: 'libby', 3: 'null', 4: 'muse' },
-  ];
-
-  // Calculate scores based on answers
-  answers.forEach((answer, index) => {
-    if (index < scoringRules.length) {
-      const questionRules = scoringRules[index];
-      const persona = questionRules[answer];
-      if (persona) {
-        scores[persona]++;
-      }
-    }
-  });
-
-  // Determine the winner
-  let winner = 'null'; // Default persona
-  let maxScore = 0;
-  for (const persona in scores) {
-    if (scores[persona] > maxScore) {
-      maxScore = scores[persona];
-      winner = persona;
-    }
-  }
-
-  // Return the winner and their quote
-  return {
-    winner,
-    quote: personaQuotes[winner]
-  };
-}
+import { calculatePersona } from "../../server/scoring";
 
 export const POST = frames(async (ctx) => {
-  // Get the previous answers from state
+  // Safely retrieve state with fallback for missing data
   const state = ctx.previousState || { userId: "anon", answers: [] };
+  const { userId, answers = [] } = state;
   
-  // Calculate the result based on answers
-  const result = scoreAnswers(state.answers);
-  
-  // Capitalize the persona name for the image filename
-  const personaImageName = result.winner.toUpperCase();
+  // Calculate the matching persona
+  const persona = calculatePersona(answers);
+
+  // Provide detailed information about what answers led to this result
+  const totalQuestions = answers.length;
   
   return {
     image: {
-      src: `${ctx.baseUrl}/images/${personaImageName}.jpg`,
+      src: `${ctx.baseUrl}/images/${persona.image}`,
     },
-    title: `Your DeepGov Persona: ${result.winner.toUpperCase()}`,
-    description: result.quote,
+    title: `Your AI Accord Match: ${persona.name}`,
+    buttons: [
+      <Button action="post" target={`https://warpcast.com/~/compose?text=I%20took%20the%20AI%20Accord%20quiz%20and%20my%20persona%20is%20${persona.name}!%20Find%20your%20match%20at%20${encodeURIComponent(ctx.baseUrl)}`}>
+        Share Result
+      </Button>,
+      <Button action="post" target="/frames">
+        Try Again
+      </Button>,
+      <Button action="link" target={`${ctx.baseUrl}/personas/${persona.id}`}>
+        Learn More
+      </Button>,
+    ],
+  };
+});
+
+// Handle direct GET requests to the result page
+export const GET = frames(async (ctx) => {
+  // For direct access, show a default message encouraging to take the quiz
+  const defaultPersona = {
+    name: "Your AI Persona",
+    image: "landing.png", 
+  };
+
+  return {
+    image: {
+      src: `${ctx.baseUrl}/images/${defaultPersona.image}`,
+    },
+    title: "Take the AI Accord Quiz to find your match!",
     buttons: [
       <Button action="post" target="/frames">
-        Share Results
-      </Button>,
-      <Button action="post" target="/frames/question1">
-        Retake Quiz
+        Start Quiz
       </Button>,
     ],
   };

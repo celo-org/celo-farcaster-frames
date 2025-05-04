@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit';
+import { getFrameHtmlResponse } from '@coinbase/onchainkit/frames';
 
 // Persona quotes
 const personaQuotes = {

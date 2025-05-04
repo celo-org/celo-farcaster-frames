@@ -22,118 +22,119 @@ app.get("/debug", (req, res) => {
     <!DOCTYPE html>
     <html>
       <head>
-        <title>DeepGov Compass Frame Debugger</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; margin: 0 auto; }
-          .frame-container { border: 2px solid #ccc; padding: 20px; margin: 20px 0; border-radius: 8px; }
-          .frame-image { max-width: 100%; margin: 10px 0; }
-          .button-row { display: flex; gap: 10px; margin: 15px 0; }
-          .frame-button { padding: 8px 16px; background: #5C5CFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
-          h1 { color: #333; }
-          .debug-info { background: #f5f5f5; padding: 10px; border-radius: 4px; margin: 20px 0; }
-        </style>
+      <meta charset="utf-8">
+      <title>AI Accord Frame Debugger</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2 { color: #111; }
+        pre { background: #f4f4f4; border: 1px solid #ddd; border-left: 3px solid #4285f4; page-break-inside: avoid; font-family: monospace; line-height: 1.6; margin-bottom: 1.6em; max-width: 100%; overflow: auto; padding: 1em 1.5em; word-wrap: break-word; }
+        form { margin: 2em 0; }
+        input, textarea, button { font-size: 1em; margin: 10px 0; padding: 8px; }
+        button { background: #4285f4; color: white; border: none; cursor: pointer; padding: 8px 16px; }
+        button:hover { background: #3275e4; }
+      </style>
       </head>
       <body>
-        <h1>DeepGov Compass Frame Debugger</h1>
-        <p>This page simulates a Farcaster client to test your frame locally.</p>
+      <h1>AI Accord Frame Debugger</h1>
+      <p>Use this tool to test your frames and scoring logic.</p>
+      
+      <div class="frame-container">
+        <h2>Current Frame</h2>
+        <div id="frame-content">Loading frame...</div>
         
-        <div class="frame-container">
-          <h2>Current Frame</h2>
-          <div id="frame-content">Loading frame...</div>
-          
-          <div class="button-row" id="button-row"></div>
-          
-          <div class="debug-info">
-            <h3>Debug Info</h3>
-            <pre id="debug-info"></pre>
-          </div>
+        <div class="button-row" id="button-row"></div>
+        
+        <div class="debug-info">
+          <h3>Debug Info</h3>
+          <pre id="debug-info"></pre>
         </div>
+      </div>
+      
+      <script>
+        // Simple Farcaster frame debugger
+        const userId = "debug-user-" + Math.floor(Math.random() * 1000);
+        let currentFrameHtml = "";
         
-        <script>
-          // Simple Farcaster frame debugger
-          const userId = "debug-user-" + Math.floor(Math.random() * 1000);
-          let currentFrameHtml = "";
-          
-          async function fetchFrame(url, buttonIndex = null) {
-            try {
-              const response = buttonIndex === null 
-                ? await fetch(url) 
-                : await fetch(url + '/api/handle', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      trustedData: {
-                        fid: userId,
-                        buttonIndex: buttonIndex
-                      }
-                    }),
-                  });
-              
-              const html = await response.text();
-              currentFrameHtml = html;
-              
-              // Extract frame data
-              const imageMatch = html.match(/<meta property="fc:frame:image" content="([^"]+)"/);
-              const imageUrl = imageMatch ? imageMatch[1] : null;
-              
-              // Extract buttons
-              const buttons = [];
-              let buttonMatch;
-              const buttonRegex = /<meta property="fc:frame:button:([1-4])" content="([^"]+)"/g;
-              while ((buttonMatch = buttonRegex.exec(html)) !== null) {
-                buttons.push({
-                  index: buttonMatch[1],
-                  label: buttonMatch[2]
+        async function fetchFrame(url, buttonIndex = null) {
+          try {
+            const response = buttonIndex === null 
+              ? await fetch(url) 
+              : await fetch(url + '/api/handle', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    trustedData: {
+                      fid: userId,
+                      buttonIndex: buttonIndex
+                    }
+                  }),
                 });
-              }
-              
-              // Extract post URL
-              const postUrlMatch = html.match(/<meta property="fc:frame:post_url" content="([^"]+)"/);
-              const postUrl = postUrlMatch ? postUrlMatch[1] : null;
-              
-              // Display frame
-              const frameContent = document.getElementById('frame-content');
-              let content = '';
-              
-              if (imageUrl) {
-                content += \`<img src="\${imageUrl}" class="frame-image" />\`;
-              }
-              
-              frameContent.innerHTML = content;
-              
-              // Create buttons
-              const buttonRow = document.getElementById('button-row');
-              buttonRow.innerHTML = '';
-              
-              buttons.forEach(button => {
-                const btn = document.createElement('button');
-                btn.className = 'frame-button';
-                btn.textContent = button.label;
-                btn.onclick = () => fetchFrame(postUrl, parseInt(button.index));
-                buttonRow.appendChild(btn);
+            
+            const html = await response.text();
+            currentFrameHtml = html;
+            
+            // Extract frame data
+            const imageMatch = html.match(/<meta property="fc:frame:image" content="([^"]+)"/);
+            const imageUrl = imageMatch ? imageMatch[1] : null;
+            
+            // Extract buttons
+            const buttons = [];
+            let buttonMatch;
+            const buttonRegex = /<meta property="fc:frame:button:([1-4])" content="([^"]+)"/g;
+            while ((buttonMatch = buttonRegex.exec(html)) !== null) {
+              buttons.push({
+                index: buttonMatch[1],
+                label: buttonMatch[2]
               });
-              
-              // Update debug info
-              document.getElementById('debug-info').textContent = 
-                JSON.stringify({
-                  userId: userId,
-                  imageUrl,
-                  postUrl,
-                  buttons: buttons.map(b => b.label)
-                }, null, 2);
-              
-            } catch (error) {
-              console.error('Error fetching frame:', error);
-              document.getElementById('frame-content').innerHTML = 
-                '<p style="color: red">Error loading frame: ' + error.message + '</p>';
             }
+            
+            // Extract post URL
+            const postUrlMatch = html.match(/<meta property="fc:frame:post_url" content="([^"]+)"/);
+            const postUrl = postUrlMatch ? postUrlMatch[1] : null;
+            
+            // Display frame
+            const frameContent = document.getElementById('frame-content');
+            let content = '';
+            
+            if (imageUrl) {
+              content += \`<img src="\${imageUrl}" class="frame-image" />\`;
+            }
+            
+            frameContent.innerHTML = content;
+            
+            // Create buttons
+            const buttonRow = document.getElementById('button-row');
+            buttonRow.innerHTML = '';
+            
+            buttons.forEach(button => {
+              const btn = document.createElement('button');
+              btn.className = 'frame-button';
+              btn.textContent = button.label;
+              btn.onclick = () => fetchFrame(postUrl, parseInt(button.index));
+              buttonRow.appendChild(btn);
+            });
+            
+            // Update debug info
+            document.getElementById('debug-info').textContent = 
+              JSON.stringify({
+                userId: userId,
+                imageUrl,
+                postUrl,
+                buttons: buttons.map(b => b.label)
+              }, null, 2);
+            
+          } catch (error) {
+            console.error('Error fetching frame:', error);
+            document.getElementById('frame-content').innerHTML = 
+              '<p style="color: red">Error loading frame: ' + error.message + '</p>';
           }
-          
-          // Initial frame load
-          fetchFrame('${frameUrl}');
-        </script>
+        }
+        
+        // Initial frame load
+        fetchFrame('${frameUrl}');
+      </script>
       </body>
     </html>
   `);
@@ -146,7 +147,7 @@ app.get("/", (req, res) => {
   return res.status(200).send(`
     <html>
       <head>
-        <title>DeepGov Compass Quiz</title>
+        <title>AI Accord Quiz</title>
         <meta property="fc:frame" content="vNext" />
         <meta property="fc:frame:image" content="${firstQuestionImageUrl}" />
         <meta property="fc:frame:button:1" content="Option A" />
@@ -156,7 +157,7 @@ app.get("/", (req, res) => {
         <meta property="fc:frame:post_url" content="http://localhost:${PORT}/api/handle" />
       </head>
       <body>
-        <h1>DeepGov Compass Quiz</h1>
+        <h1>AI Accord Quiz</h1>
         <p>Answer the questions to discover your governance persona.</p>
         <p>You should be viewing this in a Farcaster client to use the interactive frame.</p>
       </body>

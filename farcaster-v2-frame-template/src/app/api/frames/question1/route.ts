@@ -1,47 +1,60 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit';
+import { getFrameHtmlResponse } from '@coinbase/onchainkit/frames';
+
+// Define baseUrl safely with fallback
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
 export async function GET(req: NextRequest) {
-  return new Response(
-    getFrameHtmlResponse({
-      buttons: [
-        {
-          label: 'Teleportation',
-          action: 'post',
+  try {
+    return new Response(
+      getFrameHtmlResponse({
+        buttons: [
+          {
+            label: 'Teleportation',
+            action: 'post',
+          },
+          {
+            label: 'Talking to animals',
+            action: 'post',
+          },
+          {
+            label: 'Reading minds',
+            action: 'post',
+          },
+          {
+            label: 'Controlling time',
+            action: 'post',
+          },
+        ],
+        image: {
+          src: `${baseUrl}/images/q1.jpg`,
+          aspectRatio: '1.91:1',
         },
-        {
-          label: 'Talking to animals',
-          action: 'post',
+        postUrl: `${baseUrl}/api/frames`,
+      }),
+      {
+        headers: {
+          'Content-Type': 'text/html',
         },
-        {
-          label: 'Reading minds',
-          action: 'post',
-        },
-        {
-          label: 'Controlling time',
-          action: 'post',
-        },
-      ],
-      image: {
-        src: `${process.env.NEXT_PUBLIC_URL}/images/q1.jpg`,
-        aspectRatio: '1.91:1',
-      },
-      postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frames`,
-    }),
-    {
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    }
-  );
+      }
+    );
+  } catch (error) {
+    console.error('Error in question1 GET handler:', error);
+    return new Response('Error generating frame', { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const buttonIndex = body?.untrustedData?.buttonIndex || 1;
-  
-  // Store the answer (we'll use this later in the quiz to calculate results)
-  // In a real app, you'd store this in a database or session
-  
-  return Response.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question2?q1=${buttonIndex}`, 302);
+  try {
+    const body = await req.json();
+    const buttonIndex = body?.untrustedData?.buttonIndex || 1;
+    
+    // Store the answer (we'll use this later in the quiz to calculate results)
+    // In a real app, you'd store this in a database or session
+    
+    return Response.redirect(`${baseUrl}/api/frames/question2?q1=${buttonIndex}`, 302);
+  } catch (error) {
+    console.error('Error in question1 POST handler:', error);
+    return new Response('Error processing request', { status: 500 });
+  }
 }

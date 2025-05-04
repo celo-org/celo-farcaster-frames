@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
-// Define the base URL from env variable or default to a placeholder
-const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://your-vercel-domain.vercel.app'
+// Define the base URL from env variable with a fallback for local development
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
 
 // Metadata for the frame
 export const metadata: Metadata = {
@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'DeepGov Compass Quiz',
     description: 'Discover your governance persona with this interactive quiz!',
-    images: [`${baseUrl}/images/q1.jpg`],
+    images: [`${baseUrl}/celosplash.png`], // Using the splash image from the root public directory
   },
   other: {
     'fc:frame': 'vNext',
-    'fc:frame:image': `${baseUrl}/images/q1.jpg`,
+    'fc:frame:image': `${baseUrl}/celosplash.png`, // Using the splash image instead of q1.jpg
     'fc:frame:post_url': `${baseUrl}/api/frames/quiz`,
     'fc:frame:button:1': 'Start Quiz',
   },
@@ -37,7 +37,7 @@ export default function FramesPage() {
         <h2 className="text-xl font-bold mb-4">Frame Preview</h2>
         <div className="aspect-[1.91/1] relative overflow-hidden rounded-md bg-gray-100 mb-4">
           <img
-            src="/images/q1.jpg" 
+            src="/celosplash.png" 
             alt="Frame Preview"
             className="object-cover w-full h-full"
           />

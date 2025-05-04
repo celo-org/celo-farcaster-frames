@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'DeepGov Compass Quiz',
+  title: 'AI Accord Quiz',
   description: 'Discover your governance persona by answering a few quick questions!',
 };
 
