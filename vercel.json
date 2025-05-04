@@ -1,9 +1,9 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "buildCommand": "cd farcaster-v2-frame-template && yarn install && yarn add --dev typescript @types/react && yarn build",
-  "installCommand": "cd farcaster-v2-frame-template && yarn install",
-  "outputDirectory": "farcaster-v2-frame-template/.next",
+  "buildCommand": "cd deepgov-compass && yarn install && yarn build",
+  "installCommand": "cd deepgov-compass && yarn install",
+  "outputDirectory": "deepgov-compass/.next",
   "redirects": [
     {
       "source": "/",
