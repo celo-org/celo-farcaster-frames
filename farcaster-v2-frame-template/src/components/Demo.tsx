@@ -9,7 +9,7 @@ import { createStore } from 'mipd'
 import Quiz from "./farcaster/Quiz";
 
 export default function TipMeTemplate(
-  { title }: { title?: string } = { title: "Quiz Demo" }
+  { title }: { title?: string } = { title: "The AI Accord" }
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();

@@ -1,39 +1,51 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit/frames';
+import { getFrameHtmlResponse } from "@coinbase/onchainkit";
+
+// Define baseUrl safely with fallback
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
 export async function GET(req: NextRequest) {
-  return new Response(
-    getFrameHtmlResponse({
-      buttons: [
-        {
-          label: 'Go with the flow',
-          action: 'post',
+  // Get the previous answer from query params
+  const url = new URL(req.url);
+  const q1 = url.searchParams.get('q1') || '1';
+  
+  try {
+    return new Response(
+      getFrameHtmlResponse({
+        buttons: [
+          {
+            label: 'Representative governance',
+            action: 'post',
+          },
+          {
+            label: 'Direct democracy',
+            action: 'post',
+          },
+          {
+            label: 'Expert council',
+            action: 'post',
+          },
+          {
+            label: 'Decentralized autonomous',
+            action: 'post',
+          },
+        ],
+        image: {
+          src: `${baseUrl}/images/q2.jpg`,
+          aspectRatio: '1.91:1',
         },
-        {
-          label: 'Find structure',
-          action: 'post',
+        postUrl: `${baseUrl}/api/frames?q1=${q1}`,
+      }),
+      {
+        headers: {
+          'Content-Type': 'text/html',
         },
-        {
-          label: 'Seek creativity',
-          action: 'post',
-        },
-        {
-          label: 'Analyze options',
-          action: 'post',
-        },
-      ],
-      image: {
-        src: `${process.env.NEXT_PUBLIC_URL}/images/q2.jpg`,
-        aspectRatio: '1.91:1',
-      },
-      postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frames`,
-    }),
-    {
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    }
-  );
+      }
+    );
+  } catch (error) {
+    console.error('Error in question2 GET handler:', error);
+    return new Response('Error generating frame', { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {

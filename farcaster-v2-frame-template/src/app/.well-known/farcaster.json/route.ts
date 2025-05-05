@@ -1,5 +1,6 @@
 export async function GET() {
-  const appUrl = process.env.NEXT_PUBLIC_URL;
+  // Use VERCEL_URL from environment variables, with https:// prefix
+  const appUrl = `https://${process.env.NEXT_PUBLIC_URL}`;
   
   // The .well-known/farcaster.json route is used to provide the configuration for the Frame.
   // You need to generate the accountAssociation payload and signature using this link:

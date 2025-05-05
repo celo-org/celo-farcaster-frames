@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit/frames';
+import { getFrameHtmlResponse } from "@coinbase/onchainkit";
 
 // Define baseUrl safely with fallback
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
