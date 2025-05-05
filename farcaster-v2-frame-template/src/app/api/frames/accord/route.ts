@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit';
+import { getFrameMessage } from "frames.js";
 
 // Define baseUrl safely with fallback
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
@@ -7,35 +7,46 @@ const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 // This is the main entry point for the AI Accord frames
 export async function GET(req: NextRequest) {
   try {
-    return new Response(
-      getFrameHtmlResponse({
-        buttons: [
-          {
-            label: 'Liberty AI',
-            action: 'post',
-          },
-          {
-            label: 'Harmony AI',
-            action: 'post',
-          },
-          {
-            label: 'Guardian AI',
-            action: 'post',
-          },
-          {
-            label: 'Learn More',
-            action: 'post_redirect',
-            target: `${baseUrl}`,
-          }
-        ],
-        image: {
-          src: `${baseUrl}/celosplash.png`,
-          aspectRatio: '1.91:1',
+    // Create a valid Farcaster frame using frames.js correctly
+    const frameMessage = getFrameMessage({
+      buttons: [
+        {
+          label: 'Liberty AI',
+          action: 'post',
         },
-        postUrl: `${baseUrl}/api/frames/accord/sign`,
-        title: 'The AI Accord',
-        ogDescription: 'Sign with the AI that shares your values',
-      }),
+        {
+          label: 'Harmony AI',
+          action: 'post',
+        },
+        {
+          label: 'Guardian AI',
+          action: 'post',
+        },
+        {
+          label: 'Learn More',
+          action: 'post_redirect',
+          target: `${baseUrl}`,
+        }
+      ],
+      image: `${baseUrl}/celosplash.png`,
+      postUrl: `${baseUrl}/api/frames/accord/sign`,
+    });
+
+    // Return the HTML response with valid frame metadata
+    return new Response(
+      `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta property="og:title" content="The AI Accord" />
+          <meta property="og:description" content="Sign with the AI that shares your values" />
+          <meta property="og:image" content="${baseUrl}/celosplash.png" />
+          ${frameMessage}
+        </head>
+        <body>
+          <h1>The AI Accord</h1>
+          <p>Sign with the AI that shares your values</p>
+        </body>
+      </html>`,
       {
         headers: {
           'Content-Type': 'text/html',
@@ -44,7 +55,6 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     console.error('Error in AI Accord GET handler:', error);
-    // Return a simple error response instead of throwing
     return new Response('Error generating frame', { status: 500 });
   }
 }

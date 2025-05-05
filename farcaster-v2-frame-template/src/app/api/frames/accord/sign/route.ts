@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from '@coinbase/onchainkit';
-import { safeParseFrameEmbed } from '@farcaster/frame-core';
+import { getFrameMessage } from "frames.js";
 
 // Define baseUrl safely with fallback
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
@@ -17,41 +16,45 @@ export async function POST(req: NextRequest) {
   try {
     // Parse the frame request
     const body = await req.json();
-    const result = safeParseFrameEmbed(body);
-    
-    if (!result.success) {
-      return new Response('Invalid frame request', { status: 400 });
-    }
-    
-    // Get button index from the message (1-based index)
-    const buttonIndex = result.data.buttonIndex || 1;
+    const buttonIndex = body?.untrustedData?.buttonIndex || 1;
     
     // Button index corresponds to the AI option (1-3)
-    // Make sure it's within the valid range
+    // Make sure it's within the valid range for the AI options
     const aiIndex = Math.min(Math.max(buttonIndex, 1), 3) - 1;
     const selectedAI = aiOptions[aiIndex];
     
-    return new Response(
-      getFrameHtmlResponse({
-        buttons: [
-          {
-            label: 'Share Your Choice',
-            action: 'post',
-          },
-          {
-            label: 'Make Another Selection',
-            action: 'post_redirect',
-            target: `${baseUrl}/api/frames/accord`,
-          }
-        ],
-        image: {
-          src: `${baseUrl}/celosplash.png`,
-          aspectRatio: '1.91:1',
+    // Create a valid Farcaster frame using frames.js
+    const frameMessage = getFrameMessage({
+      buttons: [
+        {
+          label: 'Share Your Choice',
+          action: 'post',
         },
-        postUrl: `${baseUrl}/api/frames/accord`,
-        title: 'Thank You for Signing',
-        ogDescription: `You've signed The AI Accord with ${selectedAI.name} - ${selectedAI.description}`,
-      }),
+        {
+          label: 'Make Another Selection',
+          action: 'post_redirect',
+          target: `${baseUrl}/api/frames/accord`,
+        }
+      ],
+      image: `${baseUrl}/celosplash.png`,
+      postUrl: `${baseUrl}/api/frames/accord`,
+    });
+
+    // Return the HTML response with valid frame metadata
+    return new Response(
+      `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta property="og:title" content="Thank You for Signing" />
+          <meta property="og:description" content="You've signed The AI Accord with ${selectedAI.name} - ${selectedAI.description}" />
+          <meta property="og:image" content="${baseUrl}/celosplash.png" />
+          ${frameMessage}
+        </head>
+        <body>
+          <h1>Thank You for Signing</h1>
+          <p>You've signed The AI Accord with ${selectedAI.name} - ${selectedAI.description}</p>
+        </body>
+      </html>`,
       {
         headers: {
           'Content-Type': 'text/html',

@@ -1,73 +1,108 @@
-# 🖼️ Farcaster V2 Frame template
+# 🤖 The AI Accord
 
-A Farcaster Celo Tip Me Frame v2 Template.
+**"Sign with the AI that shares your values."**
 
-## Getting Started
+The AI Accord is a Farcaster Frames-based interactive quiz that matches users with one of five fictional AI personas based on their responses to a dystopian, ethically-loaded questionnaire.
 
-This is a [NextJS](https://nextjs.org/) + TypeScript + React app Template
+Built on top of the [Celo Farcaster Frame Template](https://github.com/celo-org/celo-farcaster-frames), this app uses the Frames.js SDK and Next.js App Router to deliver a fast, visually engaging multi-step frame experience inside Warpcast.
 
-To install dependencies:
+---
+
+## 🧩 How It Works
+
+1. Users open the app via a Farcaster frame or Mini App
+2. Each question is phrased like a clause in a fictional AI contract
+3. Users accept/reject each clause (via buttons)
+4. Answers are scored against AI personas
+5. At the end, users are matched with their aligned AI archetype
+
+---
+
+## 💡 Quiz Concept
+
+The quiz presents moral, strategic, and humorous prompts about AI governance and control. Each response contributes to one of the five AI characters:
+
+- 🧠 **Obelisk** – The Strategist  
+- 🔮 **Muse** – The Visionary  
+- 🛡 **Kairo** – The Commander  
+- 🦊 **Libby** – The Libertarian Bot  
+- 👁 **Null** – The Observer  
+
+---
+
+## 🛠️ Built With
+
+- [Next.js 13+](https://nextjs.org/)
+- [Frames.js](https://framesjs.org/)
+- [@farcaster/frame-sdk](https://www.npmjs.com/package/@farcaster/frame-sdk)
+- [Vercel](https://vercel.com/)
+- Open Graph meta tags for frame compatibility
+
+---
+
+## 🔧 Local Development
+
+### 1. Clone the repo:
 
 ```bash
-$ yarn
+git clone https://github.com/your-username/the-ai-accord.git
+cd the-ai-accord
 ```
 
-To run the app:
+### 2. Install dependencies:
 
 ```bash
-$ yarn dev
+npm install
 ```
 
-## Running on localhost with Ngrok
+### 3. Add .env.local
 
-To expose your **localhost** server to the internet using **ngrok**, install and run:
+```env
+NEXT_PUBLIC_URL=http://localhost:3000
+```
+
+### 4. Run dev server
 
 ```bash
-ngrok http 3000
-```
-This will generate a public URL ending in:
-
-```
-.ngrok-free.app
+npm run dev
 ```
 
-You can use this URL to open the app on your mobile device or a browser to test its functionality.
+## 🚀 Deployment
 
-## Running on localhost with Frame.js Debugger
+Deployed to Vercel with:
 
-You can debug and see how the frame will work on using the Frame.js debugger.
-
-Just type:
-
-```
-$ frames
+```bash
+npx vercel deploy --prod
 ```
 
-And a debugger link like this will appear in the console:
-```
-http://localhost:3010
-```
+Make sure to add:
 
-Use this local debugger to test your frame interactions before deploying.
-
-## Deploy on Vercel
-
-To deploy your frame you just need to 
-
-````
-vercel
-````
-
-after you maked just that working as spected you can deploy on prod
-
-```
-vercel --prod
+```env
+NEXT_PUBLIC_URL=https://your-vercel-app-url.vercel.app
 ```
 
-## Testing the Frame
+## 🧪 Testing on Warpcast
 
-To test the frame, open the Warpcast app, go to Developer Tools, and test both the embedded image and the full frame.
+1. Open Warpcast Frame Developer Tool
+2. Enter: https://your-vercel-app.vercel.app/frames
+3. Test each frame's load, button transitions, and image rendering
 
-Here’s the link to this template: [Farcaster v2 Frame Template](https://farcaster-v2-frame-template.vercel.app/)
+## 📱 Farcaster Mini App Support
+
+This app includes:
+
+- ✅ manifest.json at .well-known/manifest.json
+- ✅ sdk.actions.ready() integration
+- ✅ Branded splash screen support
+
+## 🙏 Credits
+
+- Inspired by Celo's Farcaster Frames Template
+- AI illustrations generated with NightCafe
+- Frame logic powered by Frames.js
+
+## 📜 License
+
+MIT
 
 

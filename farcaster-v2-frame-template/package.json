@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "frames.js": "^0.22.0",
+    "frog": "^0.18.3",
     "lucide-react": "^0.469.0",
     "mipd": "^0.0.5",
     "next": "15.0.3",
