@@ -1,9 +1,19 @@
 import { Metadata } from 'next'
+import { fetchMetadata } from "frames.js/next";
 
 // Define the base URL from env variable with a fallback for local development
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
 
-// Metadata for the frame
+// Dynamic metadata generation for proper Warpcast rendering
+export async function generateMetadata() {
+  return {
+    title: "The AI Accord",
+    description: "Sign with the AI that shares your values.",
+    other: await fetchMetadata(new URL("/frames", process.env.NEXT_PUBLIC_URL || "http://localhost:3000")),
+  };
+}
+
+// Keep static metadata for backwards compatibility
 export const metadata: Metadata = {
   title: 'DeepGov Compass Quiz',
   description: 'Discover your governance persona with this interactive quiz!',
