@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getFrameHtmlResponse } from '@coinbase/onchainkit';
-import { calculatePersona, personas } from '../../../../../../../deepgov-compass/server/scoring';
+import { calculatePersona, personas } from '../../../../lib/utils/scoring';
 
 // Define baseUrl safely with fallback
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
