@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
           src: `${baseUrl}/images/q2.jpg`,
           aspectRatio: '1.91:1',
         },
-        postUrl: `${baseUrl}/api/frames?q1=${q1}`,
+        postUrl: `${baseUrl}/api/frames/question2?q1=${q1}`,
       }),
       {
         headers: {
@@ -49,13 +49,18 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const buttonIndex = body?.untrustedData?.buttonIndex || 1;
-  
-  // Get the answer from question 1 from the URL parameters
-  const url = new URL(req.url);
-  const q1Answer = url.searchParams.get('q1') || '1';
-  
-  // Redirect to the next question with both answers in the URL
-  return Response.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question3?q1=${q1Answer}&q2=${buttonIndex}`, 302);
+  try {
+    const body = await req.json();
+    const buttonIndex = body?.untrustedData?.buttonIndex || 1;
+    
+    // Get the answer from question 1 from the URL parameters
+    const url = new URL(req.url);
+    const q1Answer = url.searchParams.get('q1') || '1';
+    
+    // Redirect to the next question with both answers in the URL
+    return Response.redirect(`${baseUrl}/api/frames/question3?q1=${q1Answer}&q2=${buttonIndex}`, 302);
+  } catch (error) {
+    console.error('Error in question2 POST handler:', error);
+    return new Response('Error processing request', { status: 500 });
+  }
 }

@@ -6,9 +6,10 @@ interface ExtendedFrameMessage {
   buttonIndex?: number;
   url?: string;
   inputText?: string;
-  // Use unknown instead of any for better type safety
   [key: string]: unknown;
 }
+
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
 /**
  * Handle frame requests with frame navigation and state
@@ -33,18 +34,18 @@ export async function POST(req: NextRequest) {
     
     // Handle the AI Accord entry point from /api/frames/quiz
     if (framePath.includes('/frames/quiz')) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/accord`, 302)
+      return NextResponse.redirect(`${baseUrl}/api/frames/question1`, 302)
     }
     
-    // Handle the start accord button from the main frame
-    if (framePath === '/frames') {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/accord`, 302)
+    // Handle the start quiz button from the main frame
+    if (framePath === '/api/frames') {
+      return NextResponse.redirect(`${baseUrl}/api/frames/question1`, 302)
     }
-    
-    // Default fallback - go to the AI Accord selection page
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/accord`, 302)
+
+    // Default redirect back to the main frame if no specific path is matched
+    return NextResponse.redirect(`${baseUrl}/api/frames`, 302)
   } catch (error) {
-    console.error('Error handling frame request:', error)
-    return NextResponse.json({ error: 'Failed to process frame request' }, { status: 500 })
+    console.error('Error processing frame request:', error)
+    return new Response('Error processing frame request', { status: 500 })
   }
 }

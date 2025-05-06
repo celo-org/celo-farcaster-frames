@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getFrameHtmlResponse } from "@coinbase/onchainkit";
+import { getFrameHtmlResponse } from '@coinbase/onchainkit';
 
 // Define baseUrl safely with fallback
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
@@ -9,33 +9,36 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const q1 = url.searchParams.get('q1') || '1';
   const q2 = url.searchParams.get('q2') || '1';
+  const q3 = url.searchParams.get('q3') || '1';
+  const q4 = url.searchParams.get('q4') || '1';
+  const q5 = url.searchParams.get('q5') || '1';
   
   try {
     return new Response(
       getFrameHtmlResponse({
         buttons: [
           {
-            label: 'Efficiency',
+            label: 'Analyze data',
             action: 'post',
           },
           {
-            label: 'Fairness',
+            label: 'Trust intuition',
             action: 'post',
           },
           {
-            label: 'Innovation',
+            label: 'Consult experts',
             action: 'post',
           },
           {
-            label: 'Stability',
+            label: 'Collaborative decision',
             action: 'post',
           },
         ],
         image: {
-          src: `${baseUrl}/images/q3.jpg`,
+          src: `${baseUrl}/images/q6.jpg`,
           aspectRatio: '1.91:1',
         },
-        postUrl: `${baseUrl}/api/frames/question3?q1=${q1}&q2=${q2}`,
+        postUrl: `${baseUrl}/api/frames/question6?q1=${q1}&q2=${q2}&q3=${q3}&q4=${q4}&q5=${q5}`,
       }),
       {
         headers: {
@@ -44,7 +47,7 @@ export async function GET(req: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('Error in question3 GET handler:', error);
+    console.error('Error in question6 GET handler:', error);
     return new Response('Error generating frame', { status: 500 });
   }
 }
@@ -58,11 +61,14 @@ export async function POST(req: NextRequest) {
     const url = new URL(req.url);
     const q1Answer = url.searchParams.get('q1') || '1';
     const q2Answer = url.searchParams.get('q2') || '1';
+    const q3Answer = url.searchParams.get('q3') || '1';
+    const q4Answer = url.searchParams.get('q4') || '1';
+    const q5Answer = url.searchParams.get('q5') || '1';
     
-    // Redirect to the next question with all answers in the URL
-    return Response.redirect(`${baseUrl}/api/frames/question4?q1=${q1Answer}&q2=${q2Answer}&q3=${buttonIndex}`, 302);
+    // Redirect to the results page with all answers in the URL
+    return Response.redirect(`${baseUrl}/api/frames/result?q1=${q1Answer}&q2=${q2Answer}&q3=${q3Answer}&q4=${q4Answer}&q5=${q5Answer}&q6=${buttonIndex}`, 302);
   } catch (error) {
-    console.error('Error in question3 POST handler:', error);
+    console.error('Error in question6 POST handler:', error);
     return new Response('Error processing request', { status: 500 });
   }
 }

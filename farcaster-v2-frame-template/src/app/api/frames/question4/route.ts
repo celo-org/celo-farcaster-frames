@@ -1,51 +1,70 @@
 import { NextRequest } from "next/server";
 import { getFrameHtmlResponse } from '@coinbase/onchainkit';
 
+// Define baseUrl safely with fallback
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+
 export async function GET(req: NextRequest) {
-  return new Response(
-    getFrameHtmlResponse({
-      buttons: [
-        {
-          label: 'Art & beauty',
-          action: 'post',
+  // Get the previous answers from query params
+  const url = new URL(req.url);
+  const q1 = url.searchParams.get('q1') || '1';
+  const q2 = url.searchParams.get('q2') || '1';
+  const q3 = url.searchParams.get('q3') || '1';
+  
+  try {
+    return new Response(
+      getFrameHtmlResponse({
+        buttons: [
+          {
+            label: 'Art & beauty',
+            action: 'post',
+          },
+          {
+            label: 'Observation',
+            action: 'post',
+          },
+          {
+            label: 'Experimentation',
+            action: 'post',
+          },
+          {
+            label: 'Clear goals',
+            action: 'post',
+          },
+        ],
+        image: {
+          src: `${baseUrl}/images/q4.jpg`,
+          aspectRatio: '1.91:1',
         },
-        {
-          label: 'Observation',
-          action: 'post',
+        postUrl: `${baseUrl}/api/frames/question4?q1=${q1}&q2=${q2}&q3=${q3}`,
+      }),
+      {
+        headers: {
+          'Content-Type': 'text/html',
         },
-        {
-          label: 'Experimentation',
-          action: 'post',
-        },
-        {
-          label: 'Clear goals',
-          action: 'post',
-        },
-      ],
-      image: {
-        src: `${process.env.NEXT_PUBLIC_URL}/images/q4.jpg`,
-        aspectRatio: '1.91:1',
-      },
-      postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frames`,
-    }),
-    {
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    }
-  );
+      }
+    );
+  } catch (error) {
+    console.error('Error in question4 GET handler:', error);
+    return new Response('Error generating frame', { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const buttonIndex = body?.untrustedData?.buttonIndex || 1;
-  
-  // Get the previous answers from the URL parameters
-  const url = new URL(req.url);
-  const q1Answer = url.searchParams.get('q1') || '1';
-  const q2Answer = url.searchParams.get('q2') || '1';
-  const q3Answer = url.searchParams.get('q3') || '1';
-  
-  // Redirect to the next question with all answers in the URL
-  return Response.redirect(`${process.env.NEXT_PUBLIC_URL}/api/frames/question5?q1=${q1Answer}&q2=${q2Answer}&q3=${q3Answer}&q4=${buttonIndex}`, 302);
+  try {
+    const body = await req.json();
+    const buttonIndex = body?.untrustedData?.buttonIndex || 1;
+    
+    // Get the previous answers from the URL parameters
+    const url = new URL(req.url);
+    const q1Answer = url.searchParams.get('q1') || '1';
+    const q2Answer = url.searchParams.get('q2') || '1';
+    const q3Answer = url.searchParams.get('q3') || '1';
+    
+    // Redirect to the next question with all answers in the URL
+    return Response.redirect(`${baseUrl}/api/frames/question5?q1=${q1Answer}&q2=${q2Answer}&q3=${q3Answer}&q4=${buttonIndex}`, 302);
+  } catch (error) {
+    console.error('Error in question4 POST handler:', error);
+    return new Response('Error processing request', { status: 500 });
+  }
 }

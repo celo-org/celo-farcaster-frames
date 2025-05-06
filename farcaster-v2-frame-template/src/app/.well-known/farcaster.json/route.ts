@@ -18,8 +18,14 @@ export async function GET() {
       name: "Tip Me V2",
       iconUrl: `${appUrl}/celosplash.png`,
       homeUrl: appUrl,
-      imageUrl: `${appUrl}/tipme.png`,
-      buttonTitle: "Launch Frame",
+      description: "Celo Farcaster Frame",
+      imageUrl: `${appUrl}/accord.png`,
+      buttons: [
+        {
+          title: "Launch Frame",
+          url: `${appUrl}/api/webhook`,
+        },
+      ],
       splashImageUrl: `${appUrl}/celosplash.png`,
       splashBackgroundColor: "#f7f7f7",
       webhookUrl: `${appUrl}/api/webhook`,

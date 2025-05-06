@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
           target: `${baseUrl}`,
         }
       ],
-      image: `${baseUrl}/celosplash.png`,
+      image: `${baseUrl}/splash.png`, // Changed from celosplash.png to splash.png
       postUrl: `${baseUrl}/api/frames/accord/sign`,
     });
 
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
         <head>
           <meta property="og:title" content="The AI Accord" />
           <meta property="og:description" content="Sign with the AI that shares your values" />
-          <meta property="og:image" content="${baseUrl}/celosplash.png" />
+          <meta property="og:image" content="${baseUrl}/splash.png" /> <!-- Changed from celosplash.png to splash.png -->
           ${frameMessage}
         </head>
         <body>

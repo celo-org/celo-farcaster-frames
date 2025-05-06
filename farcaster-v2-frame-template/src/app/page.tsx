@@ -8,10 +8,10 @@ const appUrl = process.env.NEXT_PUBLIC_URL;
 //
 const frame = {
   version: "1",
-  image: `${appUrl}/tipme.png`,
+  image: `${appUrl}/splash.png`,
   buttons: [
     {
-      label: "Sign the Accord",
+      label: "Start AI Accord Quiz",
       action: "post"
     }
   ],
@@ -22,19 +22,18 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "The AI Accord",
-    description: "Sign with the AI that shares your values",
+    title: "Celo AI Accord Quiz",
+    description: "Take the AI Accord Quiz to find your AI alignment",
     openGraph: {
-      title: "The AI Accord",
-      description: "Sign with the AI that shares your values",
-      images: [`${appUrl}/tipme.png`],
+      title: "Celo AI Accord Quiz",
+      description: "Take the AI Accord Quiz to find your AI alignment",
+      images: [`${appUrl}/splash.png`],
     },
     other: {
       "fc:frame": "vNext",
-      "fc:frame:image": `${appUrl}/tipme.png`,
-      "fc:frame:post_url": `${appUrl}/api/frames/accord`,
-      "fc:frame:button:1": "🖊 Sign the Accord",
-      "fc:frame:button:2": "📖 Read the Charter"
+      "fc:frame:image": `${appUrl}/splash.png`,
+      "fc:frame:post_url": `${appUrl}/api/frames`,
+      "fc:frame:button:1": "Start Quiz"
     }
   };
 }
