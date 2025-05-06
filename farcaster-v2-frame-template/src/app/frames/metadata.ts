@@ -1,21 +1,20 @@
 import { Metadata } from 'next';
 
-// Define the base URL from env variable with a fallback for local development
-const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+export function generateMetadata(): Metadata {
+  const appUrl = process.env.NEXT_PUBLIC_URL || 'https://your-app.vercel.app';
 
-// Metadata for the frame
-export const metadata: Metadata = {
-  title: 'The AI Accord',
-  description: 'Sign with the AI that shares your values',
-  openGraph: {
+  return {
     title: 'The AI Accord',
-    description: 'Sign with the AI that shares your values',
-    images: [`${baseUrl}/celosplash.png`],
-  },
-  other: {
-    'fc:frame': 'vNext',
-    'fc:frame:image': `${baseUrl}/celosplash.png`,
-    'fc:frame:post_url': `${baseUrl}/api/frames/quiz`,
-    'fc:frame:button:1': 'Sign the Accord',
-  },
-};
+    description: 'Sign with the AI that shares your values.',
+    openGraph: {
+      images: [`${appUrl}/celosplash.png`],
+    },
+    other: {
+      'fc:frame': 'vNext',
+      'fc:frame:image': `${appUrl}/celosplash.png`,
+      'fc:frame:post_url': `${appUrl}/api/frames/accord`,
+      'fc:frame:button:1': '🖊 Sign the Accord',
+      'fc:frame:button:2': '📖 Read the Charter',
+    },
+  };
+}

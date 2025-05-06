@@ -1,6 +1,7 @@
 {
-  "name": "Celo Farcaster Frames",
-  "description": "Farcaster Frames integration for Celo blockchain",
+  "name": "The AI Accord",
+  "short_name": "AI Accord",
+  "description": "Sign with the AI that shares your values.",
   "icons": [
     {
       "src": "/icon.png",
@@ -10,12 +11,6 @@
   ],
   "start_url": "/frames",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#35D07F",
-  "fc:frame": {
-    "image": "https://farcaster-v2-frame-template-8rgcv2027-mistys-projects-9d6f5198.vercel.app/splash.png",
-    "post_url": "https://farcaster-v2-frame-template-8rgcv2027-mistys-projects-9d6f5198.vercel.app/frames"
-  },
-  "fc:frame:image": "https://farcaster-v2-frame-template-8rgcv2027-mistys-projects-9d6f5198.vercel.app/splash.png",
-  "fc:frame:post_url": "https://farcaster-v2-frame-template-8rgcv2027-mistys-projects-9d6f5198.vercel.app/frames"
+  "background_color": "#000000",
+  "theme_color": "#111111"
 }

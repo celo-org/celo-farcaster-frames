@@ -21,32 +21,21 @@ const frame = {
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const frameMetadata = {
-    version: "1", // Changed from "vNext" to "1" to comply with schema
-    imageUrl: `${appUrl}/tipme.png`,
-    button: {
-      title: "Sign the Accord",
-      action: {
-        type: "post",
-        target: `${appUrl}/api/frames`
-      }
-    }
-  };
-
   return {
     title: "The AI Accord",
     description: "Sign with the AI that shares your values",
     openGraph: {
       title: "The AI Accord",
       description: "Sign with the AI that shares your values",
-      images: [{
-        url: `${appUrl}/tipme.png`,
-      }],
+      images: [`${appUrl}/tipme.png`],
     },
     other: {
-      // Farcaster frame metadata as a single JSON string
-      "fc:frame": JSON.stringify(frameMetadata),
-    },
+      "fc:frame": "vNext",
+      "fc:frame:image": `${appUrl}/tipme.png`,
+      "fc:frame:post_url": `${appUrl}/api/frames/accord`,
+      "fc:frame:button:1": "🖊 Sign the Accord",
+      "fc:frame:button:2": "📖 Read the Charter"
+    }
   };
 }
 
