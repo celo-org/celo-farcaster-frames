@@ -19,12 +19,12 @@ if (!projectId) {
 }
 
 export const config = getDefaultConfig({
-  appName: "Tip Me",
+  appName: "Buy Hypercert",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "",
   chains: [celo, celoAlfajores],
   transports: {
-    [celo.id]: http(),
-    [celoAlfajores.id]: http(),
+    [celo.id]: http("https://celo-mainnet.g.alchemy.com/v2/4FF6xgfo305aOiFhplzY7M6AaWWZMmg_"),
+    [celoAlfajores.id]: http("https://celo-alfajores.g.alchemy.com/v2/4FF6xgfo305aOiFhplzY7M6AaWWZMmg_"),
   },
   wallets,
   ssr: true,
