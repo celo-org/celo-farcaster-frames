@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Buy Hypercert",
     openGraph: {
       title: "Buy Hypercert",
-      description: "Tip your friends and favorite creators with crypto!",
+      description: "Buy a fraction of a hypercert on Celo!",
     },
     other: {
       "fc:frame": JSON.stringify(frame),

@@ -6,21 +6,19 @@ export async function GET() {
 
   const config = {
     accountAssociation: {
-      header:
-        "",
+      header: "",
       payload: "",
-      signature:
-        "",
+      signature: "",
     },
     frame: {
       version: "1",
-      name: "Buy Hypercert V2",
-      iconUrl: `${appUrl}/celosplash.png`,
+      name: "Celo Hypercerts Marketplace",
+      iconUrl: `${appUrl}/icon.png`,
       homeUrl: appUrl,
       imageUrl: `${appUrl}/tipme.png`,
       buttonTitle: "Launch Frame",
       splashImageUrl: `${appUrl}/celosplash.png`,
-      splashBackgroundColor: "#f7f7f7",
+      splashBackgroundColor: "#EDFDFC",
       webhookUrl: `${appUrl}/api/webhook`,
     },
   };
