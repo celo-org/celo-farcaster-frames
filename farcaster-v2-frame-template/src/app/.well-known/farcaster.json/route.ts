@@ -14,7 +14,7 @@ export async function GET() {
     },
     frame: {
       version: "1",
-      name: "Tip Me V2",
+      name: "Buy Hypercert V2",
       iconUrl: `${appUrl}/celosplash.png`,
       homeUrl: appUrl,
       imageUrl: `${appUrl}/tipme.png`,
